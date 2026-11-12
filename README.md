@@ -1,426 +1,509 @@
-<div align="center">
-
 # 🌌 SPHEREx Planet X
 
-### *An AI-powered, interactive time-series flipbook for NASA's SPHEREx mission*
+**Interactive web tool that turns any RA/Dec coordinate into a time-series flipbook of real NASA SPHEREx observations — with AI analysis and contextual chat.**
 
-**Built by Altivon Builders** · NASA Space Apps Challenge 2026
+Built for NASA Space Apps Challenge 2026 · Team submission
 
-[![Hackathon](https://img.shields.io/badge/NASA%20Space%20Apps-2026-0B3D91?style=for-the-badge&logo=nasa&logoColor=white)](https://www.spaceappschallenge.org/)
-[![NASA Data](https://img.shields.io/badge/NASA%20Data-IRSA%20%7C%20SPHEREx-00B4D8?style=for-the-badge)](https://irsa.ipac.caltech.edu/)
-[![AI Powered](https://img.shields.io/badge/AI%20Powered-Gemini%20%7C%20OpenRouter-9D4EDD?style=for-the-badge)](https://openrouter.ai/)
-[![MIT License](https://img.shields.io/badge/License-MIT-10B981?style=for-the-badge)](LICENSE)
-
-[![React](https://img.shields.io/badge/React-18-61DAFB?style=flat-square&logo=react&logoColor=black)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat-square&logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
-[![FastAPI](https://img.shields.io/badge/FastAPI-0.115-009688?style=flat-square&logo=fastapi&logoColor=white)](https://fastapi.tiangolo.com/)
-[![Python](https://img.shields.io/badge/Python-3.11-3776AB?style=flat-square&logo=python&logoColor=white)](https://python.org/)
-[![Astropy](https://img.shields.io/badge/Astropy-8.0-FF6B35?style=flat-square)](https://www.astropy.org/)
-
-</div>
+**Live deployment**:
+- Frontend: https://spherex-planet-x-1.onrender.com
+- Backend API: https://spherex-planet-x.onrender.com
+- API docs: https://spherex-planet-x.onrender.com/docs
 
 ---
 
-<div align="center">
+## The Real Data
 
-### 🚀 [**Live Demo**](https://spherex-planet-x-1.onrender.com) &nbsp;·&nbsp; 📡 [**API Docs**](https://spherex-planet-x.onrender.com/docs) &nbsp;·&nbsp; 💻 [**GitHub**](https://github.com/shrikanthnahak1506-svg/spherex-planet-x)
-
-</div>
-
----
-
-## 🔭 Overview
-
-**SPHEREx Planet X** is an interactive web tool that transforms any RA/Dec sky coordinate into a **time-series flipbook of real NASA SPHEREx observations** — parsed directly from NASA's Infrared Science Archive (IRSA), rendered as animated flipbook frames, and analyzed in real time by AI.
-
-### The Challenge
-
-NASA's SPHEREx telescope maps the entire sky in **102 infrared bands** every 6 months, hunting for the building blocks of life and the origins of the universe. The data is public — but it's served as **70 MB FITS files** with no easy way for citizens to explore it.
-
-### Our Solution
-
-We built a **3-part pipeline** that makes SPHEREx data accessible in seconds:
-
-1. **Query** — Enter any RA/Dec coordinate
-2. **Render** — Backend fetches small cutouts (~5 MB) from IRSA and converts them to WebP flipbook frames
-3. **Interpret** — AI generates astrophysical analysis + multi-turn chat about the observation
-
-For **WISE 0855** (nearest Y-dwarf brown dwarf, 7.4 light-years away), our tool retrieved **278 MEFs**, deduplicated to **142 unique epochs spanning 362 days** — real telescope data, ready to play as a 13-month flipbook.
-
----
-
-## ✨ Key Features
-
-### 🛰️ Real NASA Data
-- Live queries to **IRSA SIA service** via `astroquery`
-- **Cutout service** downloads just the 0.3° region — **93% smaller** than full MEFs
-- FITS parsing with `astropy` — extracts IMAGE, FLAGS, VARIANCE, ZODI, PSF, WCS-WAVE
-- **Bitmask-aware quality checks** (0% strict-bad pixels for WISE 0855)
-
-### 🎬 Interactive Flipbook
-- Real SPHEREx images rendered as **animated WebP frames**
-- **Play / Pause** with adjustable frame rate
-- **Frame slider** for precise navigation
-- **Auto-fetch URL sharing** — opening a shared link loads the same observation
-- Smart **spread selection** picks frames evenly across full time range
-
-### 🤖 AI Integration
-- **Gemini via OpenRouter** generates ~80-word astrophysical interpretations
-- **Multi-turn AI chat** — ask follow-up questions about the observation
-- **Dynamic target resolution** — knows if you're looking at WISE 0855 or custom coordinates
-- Graceful **provider fallback** chain (OpenRouter → Gemini → clear error)
-
-### 🎨 Design Vision (UI Mockup)
-- Interactive canvas with **4 viewing modes** (Standard, Difference, Stack, RGB)
-- **SED spectrum chart** (Chart.js) showing flux vs wavelength
-- **102-band selector** across 6 detector arrays
-- **Catalog overlays** (Gaia, WISE, SIMBAD) with toggle switches
-- **Citizen discovery log** with CSV export
-
-### 🏗️ Production-Grade Engineering
-- **CI/CD** on GitHub Actions with real IRSA tests
-- **Disk caching** — cached fetches in ~2-3 sec
-- **Exponential backoff retry** on IRSA 5xx errors
-- **Client-side validation** with friendly error messages
-- **Accessibility** (aria-labels, keyboard navigation)
-- **Protected `main` branch** — every PR requires green CI
-
----
-
-## 📊 The Real Data
-
-Every frame in our flipbook is a **real SPHEREx telescope image** — not a simulation.
-
-<div align="center">
+Our flipbook is not a simulation. For WISE 0855 (nearest Y-dwarf brown dwarf):
 
 | Metric | Value |
-|:---|:---|
-| 🎯 **Target** | WISE 0855 (nearest Y-dwarf brown dwarf) |
-| 📍 **Coordinate** | RA 133.795129° · Dec -7.245147° |
-| 📦 **Total MEFs at position** | **278** |
-| 🕐 **Unique observation epochs** | **142** |
-| 📅 **Time span** | **362 days** (May 2025 → May 2026) |
-| 🎞️ **Frames in default demo** | 5 (selectable 1–10) |
-| 🗜️ **Bandwidth savings** | **93%** (5 MB cutouts vs 70 MB MEFs) |
-| ✅ **Strict-bad pixels** | **0.00%** |
-| 🛰️ **Data source** | NASA IRSA · SPHEREx QR2 release |
+|---|---|
+| Total MEFs covering the position | **278** |
+| Unique observation epochs | **142** |
+| Time span of returned flipbook | **362–364 days** (May 2025 → May 2026) |
+| Default cutout size | **0.3°** (configurable 0.1–1.0°) |
+| Frames in default demo | 5 (selectable 1–10) |
+| Data source | IRSA · SPHEREx QR2 release |
+| Strict-bad pixels | **0.00%** |
 
-</div>
-
-### Why Cutouts?
-
-A full SPHEREx MEF file is **~70 MB** — 99% of which is the PSF (point spread function) extension. For flipbook rendering, we only need the **IMAGE HDU**. IRSA's cutout service delivers a spatially cropped version at **~5 MB per frame** — a **93% bandwidth reduction** with zero loss in visual quality.
-
-### Data Quality
-
-FLAGS bitmask analysis reveals bit 21 (28.8% of pixels) is a **benign coverage flag**, not a data error. Naive `FLAGS != 0` checks count 31.4% as "bad" — our **bitmask-aware quality check** excludes benign bits, giving **0% strict-bad rate**.
+Every frame is a real SPHEREx spectral image — parsed from FITS, normalized, and served as WebP.
 
 ---
 
-## 🛠️ Tech Stack
+## What It Does
 
-<table>
-<tr>
-<td valign="top" width="33%">
-
-### 🎨 Frontend
-
-- **React 18** + TypeScript
-- **Vite 5** (dev + build)
-- **Tailwind CSS** (design system)
-- **Zustand** (state management)
-- **Chart.js** (SED visualization)
-- **Lucide React** (icons)
-- **Tailwind dark mode**
-
-</td>
-<td valign="top" width="33%">
-
-### ⚙️ Backend
-
-- **Python 3.11** + FastAPI
-- **Uvicorn** (ASGI server)
-- **Astropy 8.0** (FITS parsing)
-- **Astroquery** (IRSA SIA)
-- **Pillow** (WebP rendering)
-- **NumPy** (array ops)
-- **Disk cache** (WebP frames)
-
-</td>
-<td valign="top" width="33%">
-
-### 🤖 AI & DevOps
-
-- **Gemini Flash** (via OpenRouter)
-- **OpenRouter** (multi-provider)
-- **httpx** (async API calls)
-- **GitHub Actions** (CI/CD)
-- **Render** (deployment)
-- **MIT License**
-
-</td>
-</tr>
-</table>
+1. User enters RA/Dec (or shares a link with `?ra=X&dec=Y&n_frames=Z`)
+2. Backend queries NASA IRSA via SIA for SPHEREx Spectral Image MEFs
+3. Downloads small 0.3° cutouts — not the full 70 MB MEF
+4. Parses FITS, extracts IMAGE HDU, normalizes each epoch to WebP
+5. Frontend renders frames as an interactive time-series flipbook
+6. **AI Insight** — Gemini (via OpenRouter) generates ~80-word interpretation
+7. **AI Chat** — multi-turn conversation about the current observation
 
 ---
 
-## 🚀 Local Setup
+## ✅ Working End-to-End (Verified, Deployed)
 
-### Prerequisites
+### Data pipeline
+- IRSA SIA query via `astroquery.ipac.irsa.Irsa`
+- QR2 collection confirmed working (QR3 not yet covering WISE 0855)
+- Cutout service integration (`?center=RA,DEC&size=0.3`)
+- FITS parsing: `IMAGE`, `FLAGS`, `VARIANCE`, `ZODI`, `PSF`, `WCS-WAVE`
+- WCS validated (celestial coordinates present)
+- FLAGS bitmask-aware quality checks (bit 21 = benign, strict-bad rate 0%)
+- Multi-epoch fetcher with **exponential backoff retry** on HTTP 5xx
+- **Spread selection** — picks N frames evenly across full time range
+- Flipbook assembly (animated WebP + GIF)
 
-- **Python 3.11+** · **Node.js 18+** · **npm** · **Git**
-- Free **OpenRouter API key** from [openrouter.ai/keys](https://openrouter.ai/keys)
+### Backend API
+- `GET  /health` — service status + AI provider availability
+- `POST /api/cutouts/frames` — fetch N epochs, return WebP URLs + real quality metrics
+- `POST /api/explain` — AI-generated astrophysical interpretation (~80 words)
+- `POST /api/chat` — multi-turn conversation with observation context
+- Retry-on-5xx with 3 attempts, exponential backoff (3s → 6s → 12s)
+- Disk caching — repeat queries in ~2–3 sec (measured through Render)
+- OpenRouter → direct Gemini fallback chain
 
-### 1. Clone the Repository
+### Frontend
+- ✅ **LiveDataPanel** — real SPHEREx flipbook + AI insight + AI chat
+- ✅ **URL sync** — RA/Dec/frames written to URL after fetch (shareable)
+- ✅ **Auto-fetch on load** — opening a shared URL loads the same observation
+- ✅ **Dynamic target name** — resolves preset name or `"RA X° / Dec Y°"`
+- ✅ **Client-side validation** — friendly error messages (not raw Pydantic JSON)
+- ✅ **Real quality stats** — frame success %, cadence, source from actual API response
+- ✅ **Interactive design vision** — canvas modes, overlays, playback all work
+- ✅ **CSV export** — Discovery log downloads as file
+- ✅ **Accessibility** — aria-labels on all inputs, buttons, sliders
 
-'''
-git clone https://github.com/shrikanthnahak1506-svg/spherex-planet-x.git
-cd spherex-planet-x
-'''
+### AI Integration
+- **2 providers**: OpenRouter (primary) + Gemini direct (fallback)
+- **2 endpoints**: `/api/explain` (one-shot) + `/api/chat` (multi-turn)
+- Robust error handling: reasoning models, None content, rate limits, timeouts
+- Context-aware: injects RA/Dec, epochs, span into prompt
+- Demo-verified with `nvidia/nemotron-3.5-super-vl:free` (also works with `meta-llama/llama-3.3-70b-instruct:free`)
 
-### 2. Backend Setup (Terminal 1)
-
-'''bash
-# Install Python dependencies
-pip install -r requirements.txt
-
-# Set AI environment variables
-# Windows (PowerShell)
-$env:OPENROUTER_API_KEY = "sk-or-v1-YOUR-KEY-HERE"
-$env:OPENROUTER_MODEL = "nvidia/nemotron-3.5-super-vl:free"
-
-# macOS/Linux
-export OPENROUTER_API_KEY="sk-or-v1-YOUR-KEY-HERE"
-export OPENROUTER_MODEL="nvidia/nemotron-3.5-super-vl:free"
-
-# Start FastAPI server
-uvicorn app.main:app --reload --port 8000
-'''
-
-**Verify backend**: http://127.0.0.1:8000/health → should return `{"status":"ok", "ai":{"openrouter":true}}`
-
-### 3. Frontend Setup (Terminal 2)
-
-'''bash
-# Install Node dependencies
-npm install
-
-# Or on Windows PowerShell:
-npm.cmd install
-
-# Start dev server
-npm run dev
-
-# Or on Windows:
-npm.cmd run dev
-'''
-
-**Open**: http://localhost:5173
-
-### 4. Test the Flipbook
-
-1. Leave defaults: **RA `133.795129`**, **Dec `-7.245147`**, **Frames `5`**
-2. Click **FETCH** → wait 90-180 sec (first time only, downloads real NASA data)
-3. Click **PLAY** to cycle frames
-4. Click **GENERATE AI INSIGHT** for astrophysical analysis
-5. Click **ASK ABOUT THIS DATA** to chat about the observation
-
-**Cached fetches**: after the first run, subsequent fetches return in **~2-3 seconds** from disk cache.
-
-### Environment Variables
-
-See [`.env.example`](.env.example) for full template:
-
-'''bash
-OPENROUTER_API_KEY=sk-or-v1-...       # Required for AI features
-OPENROUTER_MODEL=nvidia/nemotron-3.5-super-vl:free
-VITE_BACKEND_URL=http://localhost:8000  # Frontend backend URL
-'''
-
-> ⚠️ **Never commit `.env`** — it's in `.gitignore`.
+### CI Pipeline
+- GitHub Actions on every push/PR
+- Real IRSA query in CI (not mocked)
+- Uploads artifacts (FITS, plots, logs)
+- `main` branch protected, requires green CI + PR approval
 
 ---
 
-## 📡 API Endpoints
+## 🏗 Architecture
 
-| Method | Endpoint | Description |
-|:---:|:---|:---|
-| `GET` | `/health` | Service status + AI provider check |
-| `POST` | `/api/cutouts/frames` | Fetch N SPHEREx epochs for RA/Dec |
-| `POST` | `/api/explain` | Generate ~80-word AI interpretation |
-| `POST` | `/api/chat` | Multi-turn conversational AI |
-
-**Full API reference**: [docs/API.md](docs/API.md) · **Interactive docs**: [/docs](https://spherex-planet-x.onrender.com/docs)
-
-### Example Request
-
-'''bash
-curl -X POST https://spherex-planet-x.onrender.com/api/cutouts/frames \
-  -H "Content-Type: application/json" \
-  -d '{
-    "ra": 133.795129,
-    "dec": -7.245147,
-    "size_deg": 0.3,
-    "n_frames": 5,
-    "collection": "spherex_qr2"
-  }'
-'''
-
-### Example Response
-
-'''json
-{
-  "total_found": 278,
-  "returned_frames": 5,
-  "frames": [
-    {
-      "epoch_mjd": 60800.700028,
-      "epoch_date": "2025-05-05T16:48:02",
-      "image_url": "/static/frames/133p7951_m7p2451_60800p7000.webp"
-    }
-  ],
-  "meta": {
-    "span_days": 362.0,
-    "unique_epochs": 142,
-    "cadence_hours": 2104.93
-  }
-}
-'''
-
----
-
-## 🏗️ Architecture
-
-'''
+```
 User (browser)
-    ↓ RA/Dec input or ?ra=X&dec=Y URL
+    ↓ RA/Dec input OR ?ra=X&dec=Y URL
 Frontend (React + Vite)
-    ↓ POST /api/cutouts/frames
+    ↓ POST /api/cutouts/frames (proxied)
 Backend (FastAPI)
-    ↓ Irsa.query_sia(pos, collection)
-NASA IRSA SIA service
-    ↓ 278 MEF access URLs
+    ↓ Irsa.query_sia
+NASA IRSA (SIA service)
+    ↓ MEF access_url
 Backend
-    ↓ Deduplicate → 142 epochs → spread-select N frames
     ↓ access_url?center=RA,DEC&size=0.3
-NASA IRSA cutout service
-    ↓ ~5 MB FITS per cutout
+NASA IRSA (cutout service)
+    ↓ ~5 MB FITS cutout
 Backend
     ↓ astropy parses IMAGE HDU
     ↓ percentile normalize (5-95%)
     ↓ save as 20 KB WebP
-Frontend ← JSON response
-    ↓ Flipbook plays + AI analyzes
-User sees 13 months of SPHEREx data
-'''
+    ↓ {"frames": [...], "meta": {...}}
+Frontend renders flipbook
 
-**Deep-dive**: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
+    ↓ POST /api/explain (metadata only)
+Backend → OpenRouter → Gemini/Llama
+    ↓ ~80-word interpretation
+Frontend typewriter effect
+
+    ↓ POST /api/chat (message history)
+Backend → OpenRouter → Gemini/Llama
+    ↓ contextual reply
+Frontend chat panel
+```
+
+Detailed version: [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)
 
 ---
 
-## 📁 Project Structure
+## Tech Stack
 
-'''
+| Layer | Technology |
+|---|---|
+| Frontend | React 18 + TypeScript + Vite 5 |
+| Styling | Tailwind CSS (CDN in index.html) |
+| State | Zustand (with localStorage persistence) |
+| Charts | Chart.js 4 |
+| Icons | Lucide React |
+| Backend | Python 3.11 + FastAPI + Uvicorn |
+| Astronomy | astropy 8.0, astroquery 0.4, pyvo |
+| AI | OpenRouter (Gemini / Nemotron / Llama), direct Gemini fallback |
+| Data | FITS MEF → WebP via Pillow |
+| CI/CD | GitHub Actions |
+| Deployment | Render (backend + frontend) |
+
+---
+
+## Quick Start (Local)
+
+### 1. Install dependencies
+
+```
+pip install -r requirements.txt
+npm.cmd install       # Windows
+npm install           # macOS/Linux
+```
+
+### 2. Set AI env vars (terminal)
+
+```
+# PowerShell
+$env:OPENROUTER_API_KEY = "sk-or-v1-YOUR-KEY"
+$env:OPENROUTER_MODEL = "nvidia/nemotron-3.5-super-vl:free"
+```
+
+Get key: https://openrouter.ai/keys (free tier available)
+
+### 3. Start backend (Terminal 1)
+
+```
+uvicorn app.main:app --reload --port 8000
+```
+
+Verify: http://127.0.0.1:8000/health → `{"status":"ok", "ai":{"openrouter":true,...}}`
+
+### 4. Start frontend (Terminal 2)
+
+```
+npm.cmd run dev       # Windows
+npm run dev           # macOS/Linux
+```
+
+Open: http://localhost:5173
+
+### 5. Test
+
+- RA: `133.795129`, Dec: `-7.245147` (WISE 0855)
+- Frames: `5`
+- Click **FETCH** → flipbook loads
+- Click **GENERATE AI INSIGHT** → AI interpretation streams
+- Click **ASK ABOUT THIS DATA** → chat opens, ask "Why does proper motion matter?"
+
+**First fetch**: 90–180 sec (real NASA download of 5 × 5 MB cutouts)
+**Subsequent fetches**: ~2–3 sec (disk-cached WebP frames)
+
+---
+
+## API Reference
+
+### `POST /api/cutouts/frames`
+
+```json
+{
+  "ra": 133.795129,
+  "dec": -7.245147,
+  "size_deg": 0.3,
+  "n_frames": 5,
+  "collection": "spherex_qr2"
+}
+```
+
+```json
+{
+  "ra": 133.795129,
+  "dec": -7.245147,
+  "collection": "spherex_qr2",
+  "total_found": 278,
+  "returned_frames": 5,
+  "frames": [
+    {
+      "frame_index": 210,
+      "epoch_mjd": 60800.700028,
+      "epoch_date": "2025-05-05T16:48:02",
+      "image_url": "/static/frames/133p7951_m7p2451_60800p7000.webp",
+      "mef_url": "https://irsa.ipac.caltech.edu/..."
+    }
+  ],
+  "meta": {
+    "size_deg": 0.3,
+    "cadence_hours": 2104.93,
+    "span_days": 364.0,
+    "unique_epochs": 142
+  }
+}
+```
+
+### `POST /api/explain`
+
+```json
+{
+  "ra": 133.795129,
+  "dec": -7.245147,
+  "target_name": "WISE 0855",
+  "unique_epochs": 142,
+  "span_days": 362,
+  "cadence_hours": 2104.93
+}
+```
+
+```json
+{
+  "explanation": "WISE 0855 is a Y-dwarf brown dwarf...",
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3.5-super-vl:free"
+}
+```
+
+### `POST /api/chat`
+
+```json
+{
+  "messages": [
+    {"role": "user", "content": "Why does proper motion matter?"}
+  ],
+  "context": {
+    "ra": 133.795129,
+    "dec": -7.245147,
+    "target_name": "WISE 0855",
+    "unique_epochs": 142,
+    "span_days": 362
+  }
+}
+```
+
+```json
+{
+  "reply": "Proper motion shows how fast the object moves across the sky...",
+  "provider": "openrouter",
+  "model": "nvidia/nemotron-3.5-super-vl:free"
+}
+```
+
+Full API docs: [docs/API.md](docs/API.md)
+
+---
+
+## Repository Structure
+
+```
 spherex-planet-x/
-├── .github/workflows/         # CI pipeline (real IRSA tests)
-├── app/main.py                # FastAPI backend (3 endpoints)
-├── scripts/                   # Data pipeline utilities
-│   ├── spherex_pipeline_test.py
-│   ├── decode_flags.py
-│   ├── analyze_epochs.py
-│   └── assemble_flipbook.py
-├── src/                       # React frontend
-│   ├── main.tsx               # Entry point
-│   ├── App.tsx                # Layout
+├── .github/workflows/
+│   └── spherex-test.yml            # CI pipeline
+├── app/
+│   └── main.py                     # FastAPI backend (3 endpoints)
+├── scripts/
+│   ├── spherex_pipeline_test.py    # End-to-end CI test
+│   ├── analyze_epochs.py           # Epoch feasibility report
+│   ├── decode_flags.py             # FLAGS bitmask analysis
+│   ├── fetch_epoch_cutouts.py      # Multi-epoch CLI downloader
+│   └── assemble_flipbook.py        # Frames → animated WebP
+├── src/
+│   ├── main.tsx                    # Entry point
+│   ├── App.tsx                     # Header + LiveDataPanel + Design Vision + Footer
 │   ├── components/
-│   │   ├── LiveDataPanel.tsx  # Real data + AI chat
-│   │   ├── SkyViewerCanvas.tsx
-│   │   ├── SEDChart.tsx
-│   │   ├── ShareModal.tsx
-│   │   └── ...
-│   ├── store/                 # Zustand state
-│   └── constants/presets.ts
-├── static/frames/             # WebP cache (runtime)
+│   │   ├── LiveDataPanel.tsx       # Real data + AI insight + AI chat
+│   │   ├── Header.tsx              # Share button → modal
+│   │   ├── ShareModal.tsx          # Copy URL from window.location
+│   │   ├── TargetNavigator.tsx     # Design mockup inputs
+│   │   ├── SkyViewerCanvas.tsx     # Interactive canvas (4 modes)
+│   │   ├── SEDChart.tsx            # Chart.js SED plot
+│   │   ├── BandSelector.tsx        # 6 arrays + fine tuning
+│   │   ├── CatalogOverlays.tsx     # Gaia/WISE/Simbad toggles
+│   │   ├── MetadataPanel.tsx       # Mockup quality flags
+│   │   ├── DiscoveryLog.tsx        # CSV export
+│   │   └── Footer.tsx
+│   ├── store/index.ts              # Zustand store
+│   ├── constants/presets.ts        # 6 preset targets
+│   └── types/index.ts              # TypeScript types
+├── static/frames/                  # Served WebP frames (runtime cache)
+├── outputs/                        # Gitignored FITS + plots
 ├── docs/
 │   ├── API.md
 │   └── ARCHITECTURE.md
-├── requirements.txt           # Python deps
-├── package.json               # Node deps
-├── vite.config.ts             # Dev proxy
-├── LICENSE                    # MIT
-└── README.md                  # ← You are here
-'''
+├── requirements.txt                # Python deps
+├── package.json                    # Node deps
+├── vite.config.ts                  # Proxy /api and /static
+├── tsconfig.json
+├── tailwind.config.js
+├── CONTRIBUTING.md
+└── README.md
+```
 
 ---
 
-## 🎯 Roadmap
+## Configuration
 
-**Completed** ✅
-- Real NASA SPHEREx data pipeline
-- Interactive flipbook + AI insights
-- AI chat with observation context
-- URL-based sharing with auto-fetch
-- Render deployment (frontend + backend)
-- CI/CD with real IRSA tests
-- Complete documentation + MIT license
+### Environment variables
 
-**In Progress** 🚧
-- Wire design vision panels to real FITS data
-- Bundle Tailwind properly (currently CDN)
+```bash
+# Required for AI features
+OPENROUTER_API_KEY=sk-or-v1-...
+OPENROUTER_MODEL=nvidia/nemotron-3.5-super-vl:free
 
-**Future** 🔮
+# Optional: direct Gemini fallback
+GEMINI_API_KEY=...
+GEMINI_MODEL=gemini-1.5-flash
+
+# Frontend (if not using Vite proxy)
+VITE_BACKEND_URL=http://localhost:8000
+```
+
+See `.env.example` for the full template. `.env` is gitignored.
+
+### Data configuration (`app/main.py`)
+
+| Parameter | Default | Notes |
+|---|---|---|
+| `size_deg` | 0.3 | Cutout size (frontend sends 0.3; API allows 0.1–1.0) |
+| `n_frames` | 5 | Frames per request (frontend clamps 1–10) |
+| `collection` | `spherex_qr2` | IRSA collection ID |
+| `workers` | 3 | Parallel download threads |
+| `retries` | 3 | HTTP 5xx retry attempts |
+| Search radius | 0.05° | SIA query radius |
+
+---
+
+## Key Data Insights
+
+### SPHEREx QR2 vs QR3
+
+- **QR2**: 278 MEFs covering WISE 0855 — **works**
+- **QR3**: 0 results at this position (rolling release not yet covering)
+
+Backend tries QR3 first, falls back to QR2 automatically.
+
+### FLAGS bitmask (from `decode_flags.py`)
+
+| Bit | Fraction | Interpretation |
+|---|---|---|
+| 21 | 28.8% | Benign coverage / detection flag |
+| 19 | 2.3% | Minor coverage |
+| 17 | 0.1% | Edge case |
+| 0, 2, 11 | <1% total | Minor flags |
+| **Strict-bad (bits 3+)** | **0.00%** | Zero bad pixels in sample |
+
+### PSF dominates cutout size
+
+For a 0.3° cutout (~5 MB FITS):
+
+| Extension | Size |
+|---|---|
+| IMAGE | ~130 KB |
+| FLAGS | ~130 KB |
+| VARIANCE | ~130 KB |
+| ZODI | ~130 KB |
+| **PSF** | **~4.5 MB (95%)** |
+| WCS-WAVE | tiny |
+
+IRSA cutout service does not support HDU filtering. Full ~5 MB download unavoidable.
+
+---
+
+## Known Limitations
+
+| Limitation | Cause | Mitigation |
+|---|---|---|
+| First fetch is slow (90–180 s) | Real NASA download (5 × 5 MB) | Demo pre-warm (cache fills disk) |
+| Cached fetches ~2–3 s | Render cold start + disk read | Accept; pre-warm before demo |
+| QR3 not usable | Rolling release not covering target | QR2 fallback automatic |
+| Cutout includes PSF (~95% size) | IRSA service doesn't support HDU filter | Accepted; PSF ignored |
+| Partial frame results | IRSA rate limit / transient 5xx | Backend retries; UI shows amber |
+| Tailwind via CDN | Not bundled for prod | Post-hackathon: proper build |
+| Design Vision panels | Mockup (except LiveDataPanel) | Clearly labeled; roadmap documented |
+
+---
+
+## Demo Strategy
+
+### Pre-warm cache (5 min before demo)
+
+```powershell
+$body = @{
+    ra = 133.795129
+    dec = -7.245147
+    size_deg = 0.3
+    n_frames = 5
+    collection = "spherex_qr2"
+} | ConvertTo-Json
+
+Invoke-RestMethod -Uri "https://spherex-planet-x.onrender.com/api/cutouts/frames" `
+    -Method Post -Body $body -ContentType "application/json"
+```
+
+This populates `static/frames/*.webp`. Demo fetches return in ~2–3 sec.
+
+### Talking points
+
+- **"Real NASA data"** — 142 epochs of SPHEREx observations
+- **"362 days of WISE 0855"** — one year of brown dwarf variability
+- **"AI does the science"** — Gemini interprets proper motion, variability, molecular absorption
+- **"Chat with the data"** — multi-turn conversation about the observation
+- **"Production pipeline"** — retry logic, spread selection, bitmask-aware quality
+
+### Honest framing (critical for judges)
+
+- ✅ **Top "LIVE SPHEREx DATA"** = real NASA data from IRSA
+- ⚠️ **Bottom "Design Vision"** = interactive UI mockup for post-hackathon
+
+Say it upfront: *"Top panel is real. Bottom is our UI vision."* Judges respect transparency.
+
+### Judge Q&A prep
+
+| Question | Answer |
+|---|---|
+| **Is this real data?** | Top panel queries IRSA live. Bottom is mockup. |
+| **How does AI work?** | Metadata sent to Gemini via OpenRouter. No images sent. |
+| **What if IRSA down?** | Disk cache + retry. Fallback URL documented. |
+| **Scalability?** | Single-target MVP. Prod: S3 cache + Redis + background sync. |
+| **Why WISE 0855?** | Nearest brown dwarf, well-studied, perfect time-domain test case. |
+| **Planet X angle?** | Same tool works for any RA/Dec. Candidate = proper motion + variability check. |
+
+---
+
+## Team
+
+| Member | Role |
+|---|---|
+| **Lidiya** | Frontend design + UI components + QA |
+| **Anshuman** | Backend + NASA data pipeline |
+| **Srikanth** | Deployment + Demo/Pitch + GitHub setup |
+| **Prateek** | AI/ML + Gemini integration |
+
+---
+
+## Status
+
+**Current state**: Deployed. End-to-end working with real data + AI.
+
+**Live**:
+- ✅ Backend on Render with AI endpoints
+- ✅ Frontend on Render with full App
+- ✅ Real NASA data pipeline
+- ✅ AI insight + AI chat
+- ✅ URL-based sharing (auto-fetch on load)
+- ✅ Client-side validation
+- ✅ CSV export
+- ✅ CI with real IRSA tests
+
+**Post-hackathon roadmap**:
+- Wire Design Vision panels to real FITS data
+- Bundle Tailwind properly (drop CDN)
 - Spectral flipbook (102 wavelength channels per epoch)
 - Multi-target comparison mode
-- Aladin Lite sky overlay integration
-- Redis cache for horizontal scaling
-- Planet X candidate detection automation
-- User accounts + saved observations
+- Redis cache + background sync
+- Full frontend test coverage
 
 ---
 
-## 👥 Team — Altivon Builders
+## License
 
-<div align="center">
+Released under the [MIT License](LICENSE).
 
-| | Member | Role | Contributions |
-|:---:|:---|:---|:---|
-| 🛰️ | **Anshuman Singh** | **Backend & NASA Data Pipeline Lead** | IRSA integration, FITS parsing, quality pipeline, AI integration, deployment |
-| 🎨 | **Lidiya** | **Frontend & UI/UX Lead** | Full React UI, design system, QA report (14 bugs found → P1/P2 fixes) |
-| 🤖 | **Prateek Anand** | **AI/ML & Strategy Lead** | Gemini integration, prompt engineering, product strategy |
-| 🚀 | **Srikanth** | **DevOps & Deployment Lead** | Render deployment, GitHub setup, CI/CD, pitch support |
+**Data attribution**: SPHEREx data is provided by NASA/IPAC Infrared Science Archive (IRSA) and is in the public domain. This project's code is independent of NASA and covered by MIT.
 
-</div>
+**AI providers**: Uses OpenRouter (Gemini, Nemotron, Llama) and Google Gemini. See each provider's terms of service.
 
 ---
 
-## 📄 License
-
-Released under the [**MIT License**](LICENSE).
-
-**Data attribution**: SPHEREx data provided by [NASA/IPAC Infrared Science Archive (IRSA)](https://irsa.ipac.caltech.edu/) and is in the public domain. This project's code is independent of NASA.
-
-**AI providers**: Uses [OpenRouter](https://openrouter.ai/) (routing to Gemini, Nemotron, Llama) and Google Gemini. See each provider's terms of service.
-
----
-
-## 🙏 Acknowledgments
-
-- **NASA** for making SPHEREx data publicly accessible
-- **IPAC/IRSA** for the SIA and cutout services
-- **NASA Space Apps Challenge** for the hackathon platform
-- **Astropy** and **Astroquery** communities for the tools
-- **OpenRouter** for free AI model access
-
----
-
-<div align="center">
-
-### ⭐ If this project inspired you, give us a star!
-
-**Built with ❤️ and ☕ in 48 hours by Altivon Builders**
-
-[🌌 **Live Demo**](https://spherex-planet-x-1.onrender.com) · [📡 **API Docs**](https://spherex-planet-x.onrender.com/docs) · [💻 **GitHub**](https://github.com/shrikanthnahak1506-svg/spherex-planet-x)
-
-*"13 months of real SPHEREx observations of a brown dwarf — in one interactive flipbook, with AI that explains the science."*
-
-</div>
+**Last updated**: 2026-11-12
+**Repository**: [shrikanthnahak1506-svg/spherex-planet-x](https://github.com/shrikanthnahak1506-svg/spherex-planet-x)
