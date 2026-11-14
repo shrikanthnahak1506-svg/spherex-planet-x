@@ -60,7 +60,7 @@ if results is None:
         tap_result = tap.search(query)
         log(f"TAP: {len(tap_result)} results")
         if len(tap_result) > 0:
-            results = tap_result
+            results = tap_result.to_table()   # ← convert pyvo TAPResults → astropy Table
             used = "tap"
     except Exception as e:
         log(f"TAP: error — {e}")
